@@ -1,0 +1,1 @@
+# quicklabarcadefacilitator-event-talks-app
