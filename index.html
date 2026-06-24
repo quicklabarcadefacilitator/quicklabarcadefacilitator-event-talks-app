@@ -3,262 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tech Talks Event Schedule</title>
+    <title>Tech Talk Event</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #0056b3;
-            margin-bottom: 30px;
-        }
-        .search-container {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .search-container input[type="text"] {
-            padding: 10px;
-            width: 70%;
-            max-width: 300px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-right: 10px;
-        }
-        .search-container button {
-            padding: 10px 15px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .search-container button:hover {
-            background-color: #0056b3;
-        }
-        .schedule-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        .schedule-table th, .schedule-table td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-        .schedule-table th {
-            background-color: #f2f2f2;
-            color: #555;
-        }
-        .schedule-table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        .schedule-table tr:hover {
-            background-color: #f1f1f1;
-        }
-        .talk-description {
-            font-size: 0.9em;
-            color: #666;
-            margin-top: 5px;
-        }
-        .talk-speakers {
-            font-style: italic;
-            color: #444;
-        }
-        .talk-category {
-            font-size: 0.8em;
-            background-color: #e2e6ea;
-            padding: 3px 7px;
-            border-radius: 3px;
-            margin-right: 5px;
-            display: inline-block;
-            margin-top: 5px;
-        }
-        .lunch-break {
-            background-color: #ffeeba;
-            text-align: center;
-            font-weight: bold;
-        }
-        .no-results {
-            text-align: center;
-            padding: 20px;
-            font-style: italic;
-            color: #888;
-        }
+        body { font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px; }
+        header { border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
+        .search-box { margin-bottom: 20px; }
+        .talk-card { border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 5px; }
+        .talk-time { font-weight: bold; color: #555; }
+        .break { font-style: italic; color: #777; margin-bottom: 15px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Tech Talks Event Schedule</h1>
+    <header>
+        <h1>Tech Talk Event Schedule</h1>
+    </header>
 
-        <div class="search-container">
-            <input type="text" id="categorySearch" placeholder="Search by category (e.g., AI, Web Dev)">
-            <button onclick="filterTalks()">Search</button>
-            <button onclick="resetSearch()">Reset</button>
-        </div>
-
-        <table class="schedule-table">
-            <thead>
-                <tr>
-                    <th>Time</th>
-                    <th>Talk / Event</th>
-                    <th>Speakers</th>
-                    <th>Categories</th>
-                </tr>
-            </thead>
-            <tbody id="scheduleBody">
-                <!-- Schedule will be rendered here by JavaScript -->
-            </tbody>
-        </table>
+    <div class="search-box">
+        <input type="text" id="categorySearch" placeholder="Search by category...">
     </div>
 
+    <div id="scheduleContainer"></div>
+
     <script>
-        const talksData = [
-            {
-                title: "The Future of AI in Cloud Computing",
-                speakers: ["Dr. Anya Sharma"],
-                category: ["AI", "Cloud", "Future"],
-                duration: 60,
-                description: "An in-depth look at how artificial intelligence is shaping the next generation of cloud services and applications."
-            },
-            {
-                title: "Advanced JavaScript Patterns",
-                speakers: ["Mark Johnson", "Sarah Lee"],
-                category: ["Web Dev", "JavaScript"],
-                duration: 60,
-                description: "Explore cutting-edge JavaScript patterns and best practices for building robust and scalable web applications."
-            },
-            {
-                title: "Cybersecurity in the Age of Quantum Computing",
-                speakers: ["Prof. Chen"],
-                category: ["Security", "Quantum"],
-                duration: 60,
-                description: "Understanding the challenges and opportunities for cybersecurity as quantum computing emerges."
-            },
-            {
-                title: "Building Microservices with Node.js",
-                speakers: ["Emily White"],
-                category: ["Backend", "Node.js", "Microservices"],
-                duration: 60,
-                description: "A practical guide to designing and implementing microservices architectures using Node.js."
-            },
-            {
-                title: "User Experience Design for Developers",
-                speakers: ["David Green"],
-                category: ["UX", "Design"],
-                duration: 60,
-                description: "Learn fundamental UX principles that every developer should know to create intuitive and enjoyable user interfaces."
-            },
-            {
-                title: "DevOps Best Practices with Kubernetes",
-                speakers: ["Alice Brown", "Bob Smith"],
-                category: ["DevOps", "Kubernetes", "Cloud"],
-                duration: 60,
-                description: "Optimizing your development and operations workflow with Kubernetes and modern DevOps practices."
-            }
+        const talks = [
+            { time: "10:00 AM", title: "Introduction to AI", speaker: "Alice Smith", category: "AI, ML", duration: "1h", description: "Learn basics of AI." },
+            { time: "11:10 AM", title: "Web Accessibility 101", speaker: "Bob Johnson", category: "Web, Accessibility", duration: "1h", description: "Making web inclusive." },
+            { time: "12:20 PM", title: "Cloud Native Patterns", speaker: "Charlie Davis", category: "Cloud, DevOps", duration: "1h", description: "Scalable architecture." },
+            { time: "02:30 PM", title: "Advanced React", speaker: "Eve White", category: "Web, React", duration: "1h", description: "Beyond components." },
+            { time: "03:40 PM", title: "Security Best Practices", speaker: "Frank Green", category: "Security", duration: "1h", description: "Safe development." },
+            { time: "04:50 PM", title: "Future of Data", speaker: "Grace Hopper", category: "Data, AI", duration: "1h", description: "Data trends." }
         ];
 
-        const eventStartTime = new Date();
-        eventStartTime.setHours(10, 0, 0, 0); // Event starts at 10:00 AM
+        function renderSchedule(filter = "") {
+            const container = document.getElementById('scheduleContainer');
+            container.innerHTML = '';
+            
+            let currentTimeIndex = 0;
+            const timeline = [
+                { type: 'talk', data: talks[0] },
+                { type: 'break', label: '11:00 AM - 11:10 AM (Break)' },
+                { type: 'talk', data: talks[1] },
+                { type: 'break', label: '12:10 PM - 12:20 PM (Break)' },
+                { type: 'talk', data: talks[2] },
+                { type: 'break', label: '01:20 PM - 02:30 PM (Lunch)' },
+                { type: 'talk', data: talks[3] },
+                { type: 'break', label: '03:30 PM - 03:40 PM (Break)' },
+                { type: 'talk', data: talks[4] },
+                { type: 'break', label: '04:40 PM - 04:50 PM (Break)' },
+                { type: 'talk', data: talks[5] }
+            ];
 
-        function formatTime(date) {
-            return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        }
-
-        function generateSchedule(filterCategory = '') {
-            const scheduleBody = document.getElementById('scheduleBody');
-            scheduleBody.innerHTML = ''; // Clear existing schedule
-
-            let currentTime = new Date(eventStartTime);
-            let filteredTalks = talksData.filter(talk => 
-                filterCategory === '' || talk.category.some(cat => cat.toLowerCase().includes(filterCategory.toLowerCase()))
-            );
-
-            if (filteredTalks.length === 0 && filterCategory !== '') {
-                scheduleBody.innerHTML = '<tr><td colspan="4" class="no-results">No talks found for this category.</td></tr>';
-                return;
-            }
-
-            let talkIndex = 0;
-            const totalTalks = talksData.length; // Use original talksData length for lunch placement
-
-            for (let i = 0; i < totalTalks + 1; i++) { // +1 for lunch
-                if (i === Math.floor(totalTalks / 2)) { // Place lunch roughly in the middle
-                    const lunchStartTime = new Date(currentTime);
-                    const lunchEndTime = new Date(lunchStartTime.getTime() + 60 * 60 * 1000); // 1 hour lunch
-                    
-                    const row = scheduleBody.insertRow();
-                    row.classList.add('lunch-break');
-                    row.innerHTML = `
-                        <td>${formatTime(lunchStartTime)} - ${formatTime(lunchEndTime)}</td>
-                        <td colspan="3">Lunch Break</td>
-                    `;
-                    currentTime = new Date(lunchEndTime); // Update current time after lunch
-                    
-                    // Add a 10-minute transition after lunch if there are more talks
-                    if (talkIndex < filteredTalks.length) {
-                        currentTime = new Date(currentTime.getTime() + 10 * 60 * 1000); 
+            timeline.forEach(item => {
+                if (item.type === 'talk') {
+                    const talk = item.data;
+                    if (talk.category.toLowerCase().includes(filter.toLowerCase())) {
+                        container.innerHTML += `
+                            <div class="talk-card">
+                                <div class="talk-time">${talk.time}</div>
+                                <h3>${talk.title}</h3>
+                                <p><strong>Speaker:</strong> ${talk.speaker}</p>
+                                <p><strong>Category:</strong> ${talk.category}</p>
+                                <p>${talk.description}</p>
+                            </div>
+                        `;
                     }
-                    continue;
+                } else {
+                    container.innerHTML += `<div class="break">${item.label}</div>`;
                 }
-
-                if (talkIndex < filteredTalks.length) {
-                    const talk = filteredTalks[talkIndex];
-                    const talkStartTime = new Date(currentTime);
-                    const talkEndTime = new Date(talkStartTime.getTime() + talk.duration * 60 * 1000);
-
-                    const row = scheduleBody.insertRow();
-                    row.innerHTML = `
-                        <td>${formatTime(talkStartTime)} - ${formatTime(talkEndTime)}</td>
-                        <td>
-                            <strong>${talk.title}</strong>
-                            <div class="talk-description">${talk.description}</div>
-                        </td>
-                        <td class="talk-speakers">${talk.speakers.join(', ')}</td>
-                        <td>${talk.category.map(cat => `<span class="talk-category">${cat}</span>`).join('')}</td>
-                    `;
-                    
-                    currentTime = new Date(talkEndTime);
-                    // Add 10 minutes transition for all talks except the last one and before lunch
-                    if (talkIndex < filteredTalks.length -1 || (talkIndex === Math.floor(totalTalks / 2) -1 && i !== Math.floor(totalTalks / 2) -1) ) { // This logic for transition needs to be careful
-                         currentTime = new Date(currentTime.getTime() + 10 * 60 * 1000); // 10 minute transition
-                    }
-                    
-                    talkIndex++;
-                } else if (filterCategory === '') {
-                     // If there are still original talks to account for regarding lunch position but they are filtered out
-                    // We still need to advance time to correctly place later talks if any
-                    currentTime = new Date(currentTime.getTime() + 60 * 60 * 1000 + 10 * 60 * 1000); // 1hr talk + 10 min transition
-                }
-            }
+            });
         }
 
-        function filterTalks() {
-            const searchTerm = document.getElementById('categorySearch').value;
-            generateSchedule(searchTerm);
-        }
-
-        function resetSearch() {
-            document.getElementById('categorySearch').value = '';
-            generateSchedule();
-        }
-
-        // Initial rendering of the schedule
-        document.addEventListener('DOMContentLoaded', () => {
-            generateSchedule();
+        document.getElementById('categorySearch').addEventListener('input', (e) => {
+            renderSchedule(e.target.value);
         });
+
+        renderSchedule();
     </script>
 </body>
 </html>
